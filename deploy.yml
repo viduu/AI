@@ -1,0 +1,26 @@
+name: Order Service Build & Deploy Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Run Unit & Integration Tests
+        run: dotnet test --logger "trx;LogFileName=test_results.xml"
+
+      - name: SonarQube Security Scan
+        run: dotnet sonarscanner begin /k:"OrderService"
+
+      - name: Build & Push Docker Image to ECR
+        run: |
+          docker build -t order-service:latest .
