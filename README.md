@@ -1,6 +1,14 @@
-# Sample Application: Order Processing Service
+# Order Processing Service
 
-This is an internal web API microservice responsible for processing order requests and communicating with payment gateways.
+High-performance internal web API microservice designed to process retail orders and integrate with external payment providers.
 
-## Getting Started
-Run `dotnet restore` followed by `dotnet run` to initialize the API server locally.
+## Application Profile Metadata
+* **Service Owner:** Payment & Orders Core Engineering Team
+* **Business Impact:** High (Critical path for checkout flow)
+
+## Architecture Highlights
+* **Runtime:** .NET 8.0 / C#
+* **Primary Database:** PostgreSQL
+* **Caching:** Redis Cache
+* **Upstream External Integration:** Stripe API
+* **Observability:** Serilog sending logs to ELK Stack
