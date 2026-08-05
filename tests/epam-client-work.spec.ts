@@ -1,14 +1,21 @@
 import { test, expect } from '@playwright/test';
 
-test('navigate to Client Work from Services menu', async ({ page }) => {
-  await page.goto('https://www.epam.com/');
+test('navigate from Services to Client Work', async ({ page }) => {
+  await page.goto('https://www.epam.com/', { waitUntil: 'domcontentloaded' });
+  await expect(page).toHaveURL(/epam\.com\/?$/);
 
-  // Open Services from the header menu
-  await page.getByRole('link', { name: 'Services' }).click();
+  const servicesMenu = page.getByRole('link', { name: /^Services$/ });
+  await expect(servicesMenu).toBeVisible();
+  await servicesMenu.click();
 
-  // Click the "Explore Our Client Work" link
-  await page.getByRole('link', { name: 'Explore Our Client Work' }).click();
+  const clientWorkLink = page.getByRole('link', { name: /Explore Our Client Work/i });
+  await expect(clientWorkLink).toBeVisible();
 
-  // Verify that "Client Work" text is visible on the page
+  await Promise.all([
+    page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
+    clientWorkLink.click(),
+  ]);
+
+  await expect(page.getByRole('heading', { name: /Client Work/i })).toBeVisible();
   await expect(page.getByText('Client Work')).toBeVisible();
 });
